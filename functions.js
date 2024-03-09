@@ -10,7 +10,6 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 
 async function getTranscription(audio){
-    console.log("Getting Transcription")
     const output = await replicate.run(
         "openai/whisper:4d50797290df275329f202e48c76360b3f22b08d28c196cbc54600319435f8d2",
         {
@@ -37,7 +36,6 @@ async function getTranscription(audio){
 
 async function getText(transcription){
     try{
-        console.log("Producing text... \n")
         prompt=`You have to summarise this given text in short description in first person and then produce todos and tasks if any and return them in an array part , the text is : ${transcription}`
         const result = await model.generateContent(prompt);
         const response = await result.response;

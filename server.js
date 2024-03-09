@@ -48,6 +48,22 @@ app.post("/upload", upload.single("file") , async (req,res)=>{
 })
 
 
+app.post("/uploadaudio", upload.single("file") , async (req,res)=>{
+    let path = req.file.destination+req.file.filename
+    try{
+        await cloudinary.uploader
+    .upload(path,{
+        resource_type: "video",
+      })
+.   then(result=>{
+    res.send({url:result.url})});
+    } catch(error){
+        console.log(error);
+        res.send({msg:"Error Occured",error_detail:error})
+    }    
+})
+
+
 
 
 
