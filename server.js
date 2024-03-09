@@ -7,7 +7,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const multer = require("multer");
 const getOutput = require("./functions")
-
+const version = "1.0.1"
 dotenv.config()
 
 cloudinary.config({ 
@@ -27,7 +27,7 @@ const upload = multer({ dest: "uploads/" });
 
 
 app.get("/ping",(_,res)=>{
-    res.send({msg:"Server Live!"})
+    res.send({msg:"Server Live!",version:version})
 })
 
 app.post("/upload", upload.single("file") , async (req,res)=>{
