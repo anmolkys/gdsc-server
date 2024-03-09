@@ -2,12 +2,50 @@ const express = require("express")
 const app = express()
 const server = require("http").createServer(app);
 const dotenv = require("dotenv")
+const cloudinary = require("cloudinary").v2;
+const cors = require("cors");
+const bodyParser = require('body-parser');
+const multer = require("multer");
+const getOutput = require("./functions")
+
 dotenv.config()
 
+cloudinary.config({ 
+    cloud_name: 'feimo', 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_PASS 
+  });
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '20mb' })); // Set limit to 10 megabytes
+app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
+app.use(cors())
+
+const upload = multer({ dest: "uploads/" });
 
 
 
+app.get("/ping",(_,res)=>{
+    res.send({msg:"Server Live!"})
+})
 
+app.post("/upload", upload.single("file") , async (req,res)=>{
+    let path = req.file.destination+req.file.filename
+    try{
+        await cloudinary.uploader
+    .upload(path,{
+        resource_type: "video",
+      })
+.   then(async (result)=>{
+    let output =await getOutput(result.url)
+    res.send({notes:output})});
+    } catch(error){
+        console.log(error);
+        res.send({msg:"Error Occured",error_detail:error})
+    }
+    
+})
 
 
 
