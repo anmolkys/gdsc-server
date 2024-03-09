@@ -7,7 +7,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const multer = require("multer");
 const {getOutput , getSummary , ask} = require("./functions")
-const version = "1.0.1"
+const version = "1.0.2"
 const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
 
 dotenv.config()
