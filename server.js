@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const multer = require("multer");
 const getOutput = require("./functions")
 const version = "1.0.1"
+const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
+
 dotenv.config()
 
 cloudinary.config({ 
@@ -39,7 +41,8 @@ app.post("/upload", upload.single("file") , async (req,res)=>{
       })
 .   then(async (result)=>{
     let output =await getOutput(result.url)
-    res.send({notes:output})});
+    const document = await richTextFromMarkdown(output);
+    res.send({notes:document})});
     } catch(error){
         console.log(error);
         res.send({msg:"Error Occured",error_detail:error})
