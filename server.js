@@ -6,7 +6,7 @@ const cloudinary = require("cloudinary").v2;
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const multer = require("multer");
-const getOutput = require("./functions")
+const {getOutput , getSummary , ask} = require("./functions")
 const version = "1.0.1"
 const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
 
@@ -66,8 +66,29 @@ app.post("/uploadaudio", upload.single("file") , async (req,res)=>{
     }    
 })
 
+app.post("/summary",async (req,res)=>{
+    console.log("req recieved")
+    let text = req.body.text
+    console.log(text)
+    try{
+        const gem = await getSummary(text);
+        console.log(gem)
+        const document = await richTextFromMarkdown(gem);
+        res.send({summary:document,normal:gem})
+    }catch(error){
+        res.send({summary:"Error Occured",error:error})
+    }    
+})
 
-
+app.post("/ask",async (req,res)=>{
+    let {text,question} = req.body
+    try{
+        const gem = await ask(text,question);
+        res.send({answer:gem})
+    }catch(error){
+        res.send({answer:error})
+    }   
+})
 
 
 

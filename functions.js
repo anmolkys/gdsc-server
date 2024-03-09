@@ -36,7 +36,7 @@ async function getTranscription(audio){
 
 async function getText(transcription){
     try{
-        prompt=`You have to summarise this given text in short description in first person and then produce todos and tasks if any and return them in an array part , the text is : ${transcription}`
+        prompt=`You have to summarise this given text in short description in first person and then produce todos and tasks in simple easy to understand language if any and return them in an array , the text is : ${transcription}`
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
@@ -47,6 +47,31 @@ async function getText(transcription){
         }
 }
 
+async function getSummary(dataBuffer){
+    try{
+        const prompt = "Summarize the following text for me in under 300 words in a crisp and easy to understand manner and if it has multiple points or sub topics you can create points for them and extend the word limit keeping in mind the result text is short and crisp , the text is : "+dataBuffer
+        let x = await model.generateContent(prompt);
+        let text = x.response.text()
+        return text
+        }
+    catch(error){
+        return error
+        console.log(error);
+    }
+}
+
+async function ask(dataBuffer,question){
+    try{
+        const prompt = "Answer this question "+question+" briefly from this information provided and you have to interpret the information in the best way you can "+dataBuffer
+        let x = await model.generateContent(prompt);
+        let text = x.response.text()
+        return text
+        }
+    catch(error){
+        return error
+    }
+}
+
 
 
 async function getOutput (url) {
@@ -55,4 +80,4 @@ async function getOutput (url) {
     return points
 };
 
-module.exports = getOutput
+module.exports = { getOutput , getSummary , ask}
