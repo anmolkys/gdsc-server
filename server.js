@@ -7,7 +7,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const multer = require("multer");
 const {getOutput , getSummary , ask} = require("./functions")
-const version = "1.0.2"
+const version = "1.0.4"
 const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
 
 dotenv.config()
@@ -41,7 +41,7 @@ app.post("/upload", upload.single("file") , async (req,res)=>{
       })
 .   then(async (result)=>{
     let output =await getOutput(result.url)
-    const document = output;
+    const document = await richTextFromMarkdown(output);
     res.send({notes:document})});
     } catch(error){
         console.log(error);
