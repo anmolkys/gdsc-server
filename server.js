@@ -41,7 +41,7 @@ app.post("/upload", upload.single("file") , async (req,res)=>{
       })
 .   then(async (result)=>{
     let output =await getOutput(result.url)
-    const document = await richTextFromMarkdown(output);
+    const document = output;
     res.send({notes:document})});
     } catch(error){
         console.log(error);
