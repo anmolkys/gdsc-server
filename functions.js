@@ -36,7 +36,7 @@ async function getTranscription(audio){
 
 async function getText(transcription){
     try{
-        prompt=`You have to summarise this given text in short description in first person and then produce todos and tasks in simple easy to understand language if any and return them in an array , the text is : ${transcription}`
+        prompt=`You have to summarise this given text in short description in first person and then produce todos and tasks in simple easy to understand language if any , sort them on the basis of priority and return them in an array , the text is : ${transcription}`
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
