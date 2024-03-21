@@ -9,7 +9,8 @@ const multer = require("multer");
 const {getOutput , getSummary , ask} = require("./functions")
 const version = "1.0.4"
 const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
-
+const { emailjs } = require("@emailjs/nodejs")
+ 
 dotenv.config()
 
 cloudinary.config({ 
@@ -17,6 +18,7 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY, 
     api_secret: process.env.CLOUDINARY_API_PASS 
   });
+
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -73,6 +75,14 @@ app.post("/summary",async (req,res)=>{
     try{
         const gem = await getSummary(text);
         console.log(gem)
+        const templateParams = {
+            name: 'Apple',
+            message: gem,
+        };
+        emailjs.send('service_0ajikk8', 'template_k5zsu4i', templateParams, {
+            publicKey: 'Tnh3aPeueEt-ErVPY',
+            privateKey: 'WU8LYhrlBCOYd7VH261et',
+        }).then((response)=>{console.log("Email Sent")})
         const document = await richTextFromMarkdown(gem);
         res.send({summary:document,normal:gem})
     }catch(error){
