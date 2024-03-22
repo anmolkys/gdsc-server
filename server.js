@@ -7,7 +7,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const multer = require("multer");
 const {getOutput , getSummary , ask} = require("./functions")
-const version = "1.0.4"
+const version = "1.0.6"
 const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
 const { emailjs } = require("@emailjs/nodejs")
  
@@ -84,7 +84,7 @@ app.post("/summary",async (req,res)=>{
             privateKey: 'WU8LYhrlBCOYd7VH261et',
         }).then((response)=>{console.log("Email Sent")})
         const document = await richTextFromMarkdown(gem);
-        res.send({summary:document,normal:gem})
+        res.send({summary:document,normal:gem,msg:"Email Sent"})
     }catch(error){
         res.send({summary:"Error Occured",error:error})
     }    
