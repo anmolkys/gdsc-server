@@ -6,10 +6,10 @@ const cloudinary = require("cloudinary").v2;
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const multer = require("multer");
-const {getOutput , getSummary , ask} = require("./functions")
+const {getOutput , getSummary , ask , sendEmail} = require("./functions")
 const version = "1.0.6"
 const { richTextFromMarkdown } = require('@contentful/rich-text-from-markdown');
-const { emailjs } = require("@emailjs/nodejs")
+//const  emailjs  = require("@emailjs/nodejs")
  
 dotenv.config()
 
@@ -36,6 +36,7 @@ app.get("/ping",(_,res)=>{
 
 app.post("/upload", upload.single("file") , async (req,res)=>{
     let path = req.file.destination+req.file.filename
+    let email = req.body.email
     try{
         await cloudinary.uploader
     .upload(path,{
@@ -43,6 +44,7 @@ app.post("/upload", upload.single("file") , async (req,res)=>{
       })
 .   then(async (result)=>{
     let output =await getOutput(result.url)
+    sendEmail(output,email);
     const document = await richTextFromMarkdown(output);
     res.send({notes:document})});
     } catch(error){
@@ -71,18 +73,10 @@ app.post("/uploadaudio", upload.single("file") , async (req,res)=>{
 app.post("/summary",async (req,res)=>{
     console.log("req recieved")
     let text = req.body.text
-    console.log(text)
+    let email = req.body.email
     try{
         const gem = await getSummary(text);
-        console.log(gem)
-        const templateParams = {
-            name: 'Apple',
-            message: gem,
-        };
-        emailjs.send('service_0ajikk8', 'template_k5zsu4i', templateParams, {
-            publicKey: 'Tnh3aPeueEt-ErVPY',
-            privateKey: 'WU8LYhrlBCOYd7VH261et',
-        }).then((response)=>{console.log("Email Sent")})
+        sendEmail(gem,email);
         const document = await richTextFromMarkdown(gem);
         res.send({summary:document,normal:gem,msg:"Email Sent"})
     }catch(error){

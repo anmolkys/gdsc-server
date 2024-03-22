@@ -7,7 +7,7 @@ const replicate = new Replicate({
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
+const  emailjs  = require("@emailjs/nodejs")
 
 async function getTranscription(audio){
     const output = await replicate.run(
@@ -80,4 +80,25 @@ async function getOutput (url) {
     return points
 };
 
-module.exports = { getOutput , getSummary , ask}
+
+async function sendEmail(message,reciever){
+    const templateParams = {
+        name: 'Apple',
+        message: message,
+        to_email: reciever
+    };
+    await emailjs.send('service_0ajikk8', 'template_k5zsu4i', templateParams, {
+        publicKey: 'Tnh3aPeueEt-ErVPY',
+        privateKey: 'WU8LYhrlBCOYd7VH261et',
+    }).then(
+        (response) => {
+          console.log('SUCCESS!', response.status, response.text);
+        },
+        (err) => {
+          console.log('FAILED...', err);
+        },
+    );
+}
+
+
+module.exports = { getOutput , getSummary , ask , sendEmail}
