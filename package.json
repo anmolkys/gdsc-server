@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@contentful/rich-text-from-markdown": "^15.16.15",
+    "@emailjs/nodejs": "^2.2.0",
     "@google/generative-ai": "^0.2.1",
     "body-parser": "^1.20.2",
     "cloudinary": "^2.0.3",
